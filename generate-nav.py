@@ -51,6 +51,12 @@ class _Xobject:
         self.file_name = os.path.splitext(os.path.basename(self.path))[0]
         self.depth = self.relative_path.count(os.path.sep)
 
+    def get_unsorted_ordinal(self):
+        return self._UNSORTED_ORDINAL
+
+    def get_overview_ordinal(self):
+        return self._OVERVIEW_ORDINAL
+
 
 class Xdirectory(_Xobject):
     '''Tree structure for directories. Adds ability to merge with other trees.
@@ -74,8 +80,11 @@ class Xdirectory(_Xobject):
             other_child = other_directory.children.pop()
             if other_child.has_children():
                 for child in self.children:
-                    if child.relative_path == other_child.relative_path:
+                    shared = child.relative_path == other_child.relative_path
+                    if shared:
                         child.merge(other_child)
+                if(not shared and other_child.has_children()):
+                    self.children.append(other_child)
             else:
                 self.children.append(other_child)
 
@@ -169,7 +178,7 @@ def get_xfiles(parent:Xdirectory, distribution: str) -> _Xobject:
 def sort_xfiles(xobject: Xdirectory) -> Xdirectory:
     '''Calls List Sort on all children recursively'''
     if xobject.has_children():
-        xobject.children.sort(key=lambda x: x.get_ordinal())
+        xobject.children.sort(key=lambda x: (x.get_ordinal(), x.file_name))
         for child in xobject.children:
             sort_xfiles(child)
     
