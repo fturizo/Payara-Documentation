@@ -51,12 +51,6 @@ class _Xobject:
         self.file_name = os.path.splitext(os.path.basename(self.path))[0]
         self.depth = self.relative_path.count(os.path.sep)
 
-    def get_unsorted_ordinal(self):
-        return self._UNSORTED_ORDINAL
-
-    def get_overview_ordinal(self):
-        return self._OVERVIEW_ORDINAL
-
 
 class Xdirectory(_Xobject):
     '''Tree structure for directories. Adds ability to merge with other trees.
@@ -83,7 +77,7 @@ class Xdirectory(_Xobject):
                     shared = child.relative_path == other_child.relative_path
                     if shared:
                         child.merge(other_child)
-                if(not shared and other_child.has_children()):
+                if not shared and other_child.has_children():
                     self.children.append(other_child)
             else:
                 self.children.append(other_child)
@@ -97,7 +91,7 @@ class Xdirectory(_Xobject):
 
     def get_ordinal(self) -> int:
         '''Returns the ordinal by searching for the 'ord' file in its directory.'''
-        if(os.path.exists(self.path)):
+        if os.path.exists(self.path):
             for file in os.listdir(self.path):
                 match = re.search(self._ordinal_regex, file)
                 if match:
@@ -163,13 +157,13 @@ def get_xfiles(parent:Xdirectory, distribution: str) -> _Xobject:
             filepath = os.path.join(parent.path, file)
             xobject = None
 
-            if(os.path.isdir(filepath)):
+            if os.path.isdir(filepath):
                 xobject = get_xfiles(Xdirectory(parent, filepath), distribution)
-            elif(os.path.isfile(filepath)):
-                if("ord" not in filepath):
+            elif os.path.isfile(filepath):
+                if "ord" not in filepath:
                     xobject = Xfile(parent, filepath, file, distribution)
 
-            if(xobject):
+            if xobject:
                 parent.children.append(xobject)
         return parent
     return None
@@ -181,7 +175,7 @@ def sort_xfiles(xobject: Xdirectory) -> Xdirectory:
         xobject.children.sort(key=lambda x: (x.get_ordinal(), x.file_name))
         for child in xobject.children:
             sort_xfiles(child)
-    
+
     return xobject
 
 
@@ -198,11 +192,12 @@ def print_tree(tree: Xdirectory) -> str:
 
 
 def gen_nav(parent:str, distribution: str):
-    '''Creates two trees, one for the base documentation and another for the distribution only documentation.
-    The trees are then merged recursively.'''
+    '''Creates two trees, one for the base documentation and another for
+    the distribution only documentation. The trees are then merged recursively.'''
 
     base_files = get_xfiles(Xdirectory(None, parent), 0)
-    distribution_files = get_xfiles(Xdirectory(None, os.path.join(distribution, parent)),  distribution)
+    distribution_files = \
+        get_xfiles(Xdirectory(None, os.path.join(distribution, parent)),  distribution)
 
     files = None   
     if distribution_files:
@@ -226,7 +221,8 @@ if __name__ == "__main__":
         logging.debug("Beginning Generation for %s", distribution)
 
         #Virtually combine directory trees for the base documentation + distribution documentation
-        root_dirs = set(os.listdir(os.path.join(distribution, PAGES_PREFIX))).union(os.listdir(PAGES_PREFIX)).symmetric_difference(PARTIALS)
+        root_dirs = set(os.listdir(os.path.join(distribution, PAGES_PREFIX)))\
+            .union(os.listdir(PAGES_PREFIX)).symmetric_difference(PARTIALS)
 
         logging.debug("Root directories %s", root_dirs)
 
@@ -235,7 +231,7 @@ if __name__ == "__main__":
             dir_path = os.path.join(PAGES_PREFIX, set_dir)
             if(os.path.isdir(dir_path) or os.path.isdir(os.path.join(distribution, dir_path))):
                 nav[set_dir] = gen_nav(dir_path, distribution)
-        
+
         #Clear file contents
         with open(NAV_LOCATION, 'w', encoding="utf-8") as _:
             pass
@@ -247,15 +243,17 @@ if __name__ == "__main__":
                     if value in PARTIALS:
                         path = PARTIALS[value]
                         nav_file.write(f"\ninclude::partial${path}[{value}]\n")
-                        logging.info("%s value was replaced by a Partial file in the %s nav.", value, distribution)
+                        logging.info("%s value was replaced by a Partial file in the %s nav.", \
+                            value, distribution)
                         continue
 
                     if value not in nav:
-                        logging.warning("%s value was not found in nav. It was skipped instead.", value)
+                        logging.warning("%s value was not found in nav. It was skipped instead.",\
+                             value)
                         continue
-                    
+
                     nav_file.write(f"\n.{value}\n")
-                    
+
                     for line in nav[value]:
                         if IS_WINDOWS:
                             logging.warning("Windows back slash replaced with forward slash")
@@ -263,3 +261,4 @@ if __name__ == "__main__":
                         nav_file.write(line + "\n")
 
     logging.info("Generation Complete")
+    
