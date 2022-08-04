@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 import argparse
 import os
 import logging
@@ -34,7 +35,8 @@ DISTRIBUTIONS = ['enterprise/', 'community/']
 
 ### Classes ###
 
-class _Xobject:
+
+class _Xobject(ABC):
     '''Abstract acting object for Xdirectory and Xfile. Holds common attributes for both.'''
     _OVERVIEW_ORDINAL = -900
     _UNSORTED_ORDINAL = 900
@@ -51,6 +53,17 @@ class _Xobject:
         self.file_name = os.path.splitext(os.path.basename(self.path))[0]
         self.depth = self.relative_path.count(os.path.sep)
 
+    @abstractmethod
+    def has_children(self) -> bool:
+        '''Returns a boolean value if the tree has children.'''
+
+    @abstractmethod
+    def get_ordinal(self) -> int:
+        '''Returns the ordinal by searching for the 'ord' file in its directory.'''
+
+    @abstractmethod
+    def to_xref(self) -> str:
+        '''Generates a Antora compliant string for the nav.'''
 
 class Xdirectory(_Xobject):
     '''Tree structure for directories. Adds ability to merge with other trees.
@@ -84,13 +97,12 @@ class Xdirectory(_Xobject):
 
         return self
 
+
     def has_children(self) -> bool:
-        '''Returns a boolean value if the tree has children.'''
         return len(self.children) != 0
 
 
     def get_ordinal(self) -> int:
-        '''Returns the ordinal by searching for the 'ord' file in its directory.'''
         if os.path.exists(self.path):
             for file in os.listdir(self.path):
                 match = re.search(self._ordinal_regex, file)
@@ -98,8 +110,8 @@ class Xdirectory(_Xobject):
                     return int(match.group().strip())
         return self._UNSORTED_ORDINAL
 
+
     def to_xref(self) -> str:
-        '''Generates a Antora compliant string for the nav.'''
         return f"{self.depth*'*'} {self.file_name}"
 
 
@@ -119,13 +131,10 @@ class Xfile(_Xobject):
 
 
     def has_children(self) -> bool:
-        '''Returns false as files have no children.
-        This is to avoid a extra check during traversal.'''
         return False
 
+
     def get_ordinal(self) -> int:
-        '''Reads the first 3 lines of a file to find the ordinal attribute. Once the file has been
-        opened once, the oridnal is stored in a variable and return the next time it is called.'''
         if self.file_name == OVERVIEW_FILE_NAME:
             return self._OVERVIEW_ORDINAL
 
@@ -141,8 +150,8 @@ class Xfile(_Xobject):
 
         return self._ordinal
 
+
     def to_xref(self) -> str:
-        '''Generates a Antora compliant string for the nav.'''
         return f"{self.depth*'*'} xref:{self.relative_path}[{self.file_name.replace(FILE_EXTENSION, '')}]"
 
 
@@ -261,4 +270,3 @@ if __name__ == "__main__":
                         nav_file.write(line + "\n")
 
     logging.info("Generation Complete")
-    
