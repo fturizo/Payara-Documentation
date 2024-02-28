@@ -577,18 +577,18 @@ This section details all dependencies linked to Jakarta EE specifications.
 [source,xml]
 ----
 <dependency>
-    <groupId>org.glassfish.jersey.containers.glassfish</groupId>
-    <artifactId>jersey-gf-ejb</artifactId>
-    <version>2.34.payara-p2</version>
+    <groupId>fish.payara.server.internal.web</groupId>
+    <artifactId>jersey-mvc-connector</artifactId>
+    <version>5.39.0</version>
 </dependency>
 ----
 
 [source,xml]
 ----
 <dependency>
-    <groupId>fish.payara.server.internal.web</groupId>
-    <artifactId>jersey-mvc-connector</artifactId>
-    <version>5.39.0</version>
+    <groupId>org.glassfish.jersey.containers.glassfish</groupId>
+    <artifactId>jersey-gf-ejb</artifactId>
+    <version>2.34.payara-p2</version>
 </dependency>
 ----
 
@@ -613,6 +613,24 @@ This section details all dependencies linked to Jakarta EE specifications.
 [source,xml]
 ----
 <dependency>
+    <groupId>org.glassfish.jersey.core</groupId>
+    <artifactId>jersey-server</artifactId>
+    <version>2.34.payara-p2</version>
+</dependency>
+----
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.glassfish.jersey.media</groupId>
+    <artifactId>jersey-media-sse</artifactId>
+    <version>2.34.payara-p2</version>
+</dependency>
+----
+
+[source,xml]
+----
+<dependency>
     <groupId>org.glassfish.jersey.inject</groupId>
     <artifactId>jersey-hk2</artifactId>
     <version>2.34.payara-p2</version>
@@ -624,15 +642,6 @@ This section details all dependencies linked to Jakarta EE specifications.
 <dependency>
     <groupId>org.glassfish.jersey.ext.cdi</groupId>
     <artifactId>jersey-cdi1x-servlet</artifactId>
-    <version>2.34.payara-p2</version>
-</dependency>
-----
-
-[source,xml]
-----
-<dependency>
-    <groupId>org.glassfish.jersey.media</groupId>
-    <artifactId>jersey-media-sse</artifactId>
     <version>2.34.payara-p2</version>
 </dependency>
 ----
@@ -667,8 +676,8 @@ This section details all dependencies linked to Jakarta EE specifications.
 [source,xml]
 ----
 <dependency>
-    <groupId>org.glassfish.jersey.core</groupId>
-    <artifactId>jersey-server</artifactId>
+    <groupId>org.glassfish.jersey.media</groupId>
+    <artifactId>jersey-media-json-processing</artifactId>
     <version>2.34.payara-p2</version>
 </dependency>
 ----
@@ -678,15 +687,6 @@ This section details all dependencies linked to Jakarta EE specifications.
 <dependency>
     <groupId>org.glassfish.jersey.ext.cdi</groupId>
     <artifactId>jersey-cdi1x</artifactId>
-    <version>2.34.payara-p2</version>
-</dependency>
-----
-
-[source,xml]
-----
-<dependency>
-    <groupId>org.glassfish.jersey.media</groupId>
-    <artifactId>jersey-media-json-processing</artifactId>
     <version>2.34.payara-p2</version>
 </dependency>
 ----
@@ -721,15 +721,6 @@ This section details all dependencies linked to Jakarta EE specifications.
 [source,xml]
 ----
 <dependency>
-    <groupId>org.glassfish.jersey.core</groupId>
-    <artifactId>jersey-common</artifactId>
-    <version>2.34.payara-p2</version>
-</dependency>
-----
-
-[source,xml]
-----
-<dependency>
     <groupId>org.glassfish.jersey.ext</groupId>
     <artifactId>jersey-mvc-jsp</artifactId>
     <version>2.34.payara-p2</version>
@@ -741,6 +732,15 @@ This section details all dependencies linked to Jakarta EE specifications.
 <dependency>
     <groupId>org.glassfish.jersey.containers</groupId>
     <artifactId>jersey-container-servlet-core</artifactId>
+    <version>2.34.payara-p2</version>
+</dependency>
+----
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.glassfish.jersey.core</groupId>
+    <artifactId>jersey-common</artifactId>
     <version>2.34.payara-p2</version>
 </dependency>
 ----
@@ -1072,15 +1072,6 @@ This section details all dependencies linked to Jakarta EE specifications.
 ----
 <dependency>
     <groupId>org.glassfish.tyrus</groupId>
-    <artifactId>tyrus-container-glassfish-ejb</artifactId>
-    <version>1.17.payara-p1</version>
-</dependency>
-----
-
-[source,xml]
-----
-<dependency>
-    <groupId>org.glassfish.tyrus</groupId>
     <artifactId>tyrus-core</artifactId>
     <version>1.17.payara-p1</version>
 </dependency>
@@ -1091,6 +1082,15 @@ This section details all dependencies linked to Jakarta EE specifications.
 <dependency>
     <groupId>org.glassfish.tyrus</groupId>
     <artifactId>tyrus-container-glassfish-cdi</artifactId>
+    <version>1.17.payara-p1</version>
+</dependency>
+----
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.glassfish.tyrus</groupId>
+    <artifactId>tyrus-container-glassfish-ejb</artifactId>
     <version>1.17.payara-p1</version>
 </dependency>
 ----
